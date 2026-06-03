@@ -20,18 +20,24 @@ def train_val_split(x,y,val_ratio=0.2, seed=42):
 def get_numeric_columns(x: pd.DataFrame):
     return x.select_dtypes(include=[np.number]).columns.tolist()
 
-def fit_numeric_columns(x_train_num: pd.DataFrame):
+def fit_numeric_imputer(x_train_num: pd.DataFrame):
     medians = x_train_num.median()
     return medians
 
 def transform_numeric_imputer(x_num: pd.DataFrame,medians: pd.Series):
     return x_num.fillna(medians)
 
+def fit_standardizer(x_train_num: pd.DataFrame):
+    mean = x_train_num.mean()
+    std = x_train_num.std(ddof=0)
+    std = std.replace(0, 1.0)
+    return mean, std
+
 def transform_standardizer(x_num: pd.DataFrame, mean: pd.Series, std: pd.Series):
-    return x_num.fillna(mean)
+    return (x_num - mean) / std
 
 def add_bias_column(x: np.ndarray):
-    ones = np.ones(x.shape[0])
+    ones = np.ones((x.shape[0],1))
     return np.hstack((ones, x))
 
 def prepare_numeric_features(x_train: pd.DataFrame,x_val: pd.DataFrame):
@@ -41,13 +47,13 @@ def prepare_numeric_features(x_train: pd.DataFrame,x_val: pd.DataFrame):
 
     x_val_num = x_val[numeric_cols].copy()
 
-    medians = fit_numeric_columns(x_train_num)
+    medians = fit_numeric_imputer(x_train_num)
 
     x_train_num = transform_numeric_imputer(x_train_num, medians)
 
     x_val_num = transform_numeric_imputer(x_val_num, medians)
 
-    mean, std = fit_numeric_columns(x_train_num)
+    mean, std = fit_standardizer(x_train_num)
 
     x_train_num = transform_standardizer(x_train_num, mean, std)
 
