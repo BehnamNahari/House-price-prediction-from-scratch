@@ -4,14 +4,24 @@ from src.data_loading import load_data,split_features_target
 from src.preprocessing import train_val_split,prepare_numeric_features
 from src.model import LinearRegression
 from src.evaluate import rmse
+from src.utils import (
+    create_directories,
+    set_seed,
+    timer,
+)
 
 def main():
+
+    create_directories()
+    set_seed(RANDOM_SEED)
+    start_time = timer()
+
     train_path = RAW_DATA_DIR / 'train.csv'
     df = load_data(train_path)
     df = df.dropna(subset=[TARGET_COLUMN])
     x,y = split_features_target(df,TARGET_COLUMN)
     y = np.log1p(y)
-    x_train, x_val, y_train, y_val = train_val_split(x,y,val_ratio=VAL_RATIO, seed=RANDOM_SEED)
+    x_train, x_val, y_train, y_val = train_val_split(x,y,val_ratio=VAL_RATIO,)
     x_train_np, x_val_np, numeric_cols, medians, mean, std = prepare_numeric_features(x_train,x_val)
     y_train_np = y_train.to_numpy(dtype=np.float64)
     y_val_np = y_val.to_numpy(dtype=np.float64)
@@ -27,6 +37,8 @@ def main():
     print("\nFinal results")
     print(f"Train RMSE: {train_rmse:.6f}")
     print(f"Val RMSE: {val_rmse:.6f}")
+    elapsed = timer() - start_time
+    print(f"Training completed in {elapsed:.2f} seconds.")
 
 if __name__=='__main__':
     main()

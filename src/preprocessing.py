@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
 
-def train_val_split(x: pd.DataFrame, y: pd.Series, val_ratio: float = 0.2, seed: int = 42)-> tuple[
-    pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+def train_val_split(x: pd.DataFrame, y: pd.Series, val_ratio: float = 0.2,):
 
-    np.random.seed(seed)
     n = len(x)
     indices = np.random.permutation(n)
     val_size = int(n * val_ratio)
