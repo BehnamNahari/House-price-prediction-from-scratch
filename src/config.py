@@ -10,6 +10,8 @@ FIGURES_DIR = OUTPUTS_DIR / "figures"
 METRICS_DIR = OUTPUTS_DIR / "metrics"
 LOGS_DIR = OUTPUTS_DIR / "logs"
 PREDICTIONS_DIR = OUTPUTS_DIR / "predictions"
+MODEL_PATH = MODELS_DIR / "linear_regression.pkl"
+PREPROCESSOR_PATH = MODELS_DIR / "preprocessor.pkl"
 
 RANDOM_SEED = 42
 VAL_RATIO = 0.2

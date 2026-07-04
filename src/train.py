@@ -1,14 +1,12 @@
 import numpy as np
-from src.config import (RAW_DATA_DIR, TARGET_COLUMN, VAL_RATIO, RANDOM_SEED,LEARNING_RATE,N_EPOCHS,LAMBDA_REG )
+from src.config import (RAW_DATA_DIR, TARGET_COLUMN, VAL_RATIO, RANDOM_SEED,LEARNING_RATE,N_EPOCHS,LAMBDA_REG,MODEL_PATH,
+    PREPROCESSOR_PATH)
 from src.data_loading import load_data,split_features_target
 from src.preprocessing import train_val_split,prepare_numeric_features
 from src.model import LinearRegression
 from src.evaluate import rmse
-from src.utils import (
-    create_directories,
-    set_seed,
-    timer,
-)
+from src.utils import (create_directories, set_seed, timer)
+from src.persistence import (save_model, save_preprocessor)
 
 def main():
 
@@ -28,6 +26,13 @@ def main():
 
     model = LinearRegression(lr=LEARNING_RATE,n_epochs=N_EPOCHS,reg_lambda=LAMBDA_REG)
     model.fit(x_train_np, y_train_np,x_val_np, y_val_np,verbose=True)
+    save_model(model)
+    save_preprocessor(
+        numeric_cols=numeric_cols,
+        medians=medians,
+        mean=mean,
+        std=std,
+    )
     train_pred = model.predict(x_train_np)
     val_pred = model.predict(x_val_np)
 
@@ -39,6 +44,8 @@ def main():
     print(f"Val RMSE: {val_rmse:.6f}")
     elapsed = timer() - start_time
     print(f"Training completed in {elapsed:.2f} seconds.")
+    print(f"\nModel saved to: {MODEL_PATH}")
+    print(f"Preprocessor saved to: {PREPROCESSOR_PATH}")
 
 if __name__=='__main__':
     main()
