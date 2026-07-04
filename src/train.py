@@ -3,7 +3,7 @@ from src.config import (RAW_DATA_DIR, TARGET_COLUMN, VAL_RATIO, RANDOM_SEED,LEAR
 from src.data_loading import load_data,split_features_target
 from src.preprocessing import train_val_split,prepare_numeric_features
 from src.model import LinearRegression
-from src.evauate import rmse
+from src.evaluate import rmse
 
 def main():
     train_path = RAW_DATA_DIR / 'train.csv'

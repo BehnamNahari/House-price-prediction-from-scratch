@@ -12,17 +12,24 @@ class LinearRegression:
         rng = np.random.RandomState(42)
         self.w = rng.normal(loc=0.0, scale=0.01, size=n_features)
 
-    def predict(self,x):
+    def predict(self, x: np.ndarray) -> np.ndarray:
         return x @ self.w
 
-    def compute_loss(self, x, y):
+    def compute_loss(self, x: np.ndarray, y: np.ndarray) -> float:
         n = x.shape[0]
         y_pred = self.predict(x)
         mse = np.mean((y_pred - y)**2)
         reg = self.reg_lambda * np.sum(self.w[1:] ** 2)
         return mse + reg
 
-    def fit(self,x,y,x_val=None,y_val=None,verbose=True):
+    def fit(self,
+    x: np.ndarray,
+    y: np.ndarray,
+    x_val: np.ndarray | None = None,
+    y_val: np.ndarray | None = None,
+    verbose: bool = True
+) -> "LinearRegression":
+
         n_samples, n_features = x.shape
         self._initialize_weights(n_features)
 
