@@ -70,3 +70,4 @@ def prepare_numeric_features(x_train: pd.DataFrame,x_val: pd.DataFrame) -> tuple
     x_val_np = add_bias_column(x_val_np)
 
     return x_train_np, x_val_np, numeric_cols, medians, mean, std
+
